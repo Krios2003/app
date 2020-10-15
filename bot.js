@@ -124,5 +124,57 @@ client.on("error", e => {
   console.log(chalk.bgRed(e.replace(regToken, "that was redacted")));
 });
 
+
+////////////////////////////hoşgeldin mesajı///////////////////  
+
+client.on("guildMemberAdd", (member, message) => {
+  if (member.guild.id !== "763104952754765944") return; //SUNUCU İD
+  let user = client.users.get(member.id);
+  require("moment-duration-format");
+  let eskiisim = member.user.username;
+  const id = "763115159710990366"; //MESAJIN GİDECEĞİ KANAL İD
+  const channel = member.guild.channels.get(id);
+  let zaman = new Date().getTime() - user.createdAt.getTime()
+  const hesapzaman = moment.duration(zaman).format(` YY [Yıl] DD [Gün] HH [Saat] mm [Dakika] ss [Saniye]`) 
+  const hg = new Discord.RichEmbed()
+  .setColor('BLACK')
+  .setThumbnail(member.user.avatarURL) 
+  .setTitle(`Aglaia'ya Hoşgeldiniz`)
+  .setDescription(`<a:pembetac:763293311741853746> Sunucumuza Hoşgeldin ${member.toString()} 
+
+<a:onaywhite:763122127397847081> Seninle Beraber ${member.guild.memberCount} Kişiyiz
+
+<a:eriyenkalp:763293061912199200> Kaydının Yapılması için Sesli Odaya Gelip Teyit Vermen Gerekli
+
+<a:danspanda:763293123286663168>  <@&763115080207695892> Rolündeki Yetkililer Seninle İlgilenecektir
+
+<a:sonsuzluk2:763122082628108370> Hesap Açılalı: **${hesapzaman}** Olmuş`)
+  .setImage("https://media.giphy.com/media/KkswQk3djNXPTNX9rd/giphy.gif")
+  .setFooter('Krios By')  
+  channel.send(hg)
+});
+
+
+client.on("guildMemberAdd", async (member, message) => {
+ let yetkili = ["<@&763115080207695892>"]; //Yetkili rolünüz ID'sini girin.
+  let kanal = client.channels.get("763115159710990366"); //Kanalınızın ID'sini girin.
+
+           kanal.send(`${yetkili}, Kayıt olmayı bekleyen üye var`).then(msg => msg.delete(1000))
+
+})
+
+
+client.on("message", async message => {
+  if (message.content === "!gir") {
+   
+    client.emit(
+      "guildMemberAdd",
+      message.member || (await message.guild.fetchMember(message.author))
+    );
+  }
+});
+
+
+
 client.login(ayarlar.token);
 
